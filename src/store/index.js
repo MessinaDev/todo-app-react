@@ -7,7 +7,7 @@ const slice = createSlice({
       {
         id: 1234,
         text: "Initial task",
-        date: new Date(),
+        date: new Date().toISOString(),
         completed: false,
       },
     ],
@@ -18,6 +18,7 @@ const slice = createSlice({
       // tasks = tasks;
     },
     addTask: ({ tasks }, action) => {
+      action.payload.date = action.payload.date.toISOString();
       tasks.push(action.payload);
     },
     deleteTask: ({ tasks }, action) => {
@@ -33,9 +34,10 @@ const slice = createSlice({
 const store = configureStore({
   reducer: slice.reducer,
 });
+export default store;
+console.log("store", store);
 
 export const { addTask, deleteTask, fetchTasks } = slice.actions;
 console.log("slice", slice);
 
 store.subscribe(() => console.log(store.getState()));
-console.log("slice", slice);

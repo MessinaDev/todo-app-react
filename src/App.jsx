@@ -16,7 +16,6 @@ export default function App() {
   });
 
   const tasks = useSelector((state) => {
-    console.log("state", state);
     return state.tasks;
   });
 
