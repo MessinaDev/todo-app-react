@@ -31,29 +31,30 @@ export default function NewTodo() {
     return {
       id: Date.now(),
       text,
-      date: new Date(),
+      date: new Date().toISOString(),
       completed: false,
     };
   }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    addTodo();
+  }
+
   return (
-    <div style={styleContainer}>
+    <form autoComplete="off" style={styleContainer} onSubmit={handleSubmit}>
       <TextField
         style={styleTextField}
         id="outlined-basic"
-        label="new task.."
+        label="Description"
         variant="outlined"
         value={text}
         onChange={(event) => setText(event.target.value)}
+        required
       />
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{ ml: 2 }}
-        onClick={() => addTodo()}
-      >
+      <Fab color="primary" aria-label="add" sx={{ ml: 2 }} type="submit">
         <AddIcon />
       </Fab>
-    </div>
+    </form>
   );
 }
