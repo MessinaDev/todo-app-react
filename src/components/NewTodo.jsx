@@ -4,21 +4,12 @@ import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
 import { useDispatch } from "react-redux";
 import { addTask } from "../store";
+import Grid from "@mui/material/Grid";
 
 export default function NewTodo() {
   const [text, setText] = useState("");
 
   const dispatch = useDispatch();
-
-  const styleContainer = {
-    width: "100%",
-    display: "flex",
-  };
-  const styleTextField = {
-    // TODO: sistemare
-    width: "100%",
-    paddingRight: "10px",
-  };
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -42,19 +33,25 @@ export default function NewTodo() {
   }
 
   return (
-    <form autoComplete="off" style={styleContainer} onSubmit={handleSubmit}>
-      <TextField
-        style={styleTextField}
-        id="outlined-basic"
-        label="Description"
-        variant="outlined"
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-        required
-      />
-      <Fab color="primary" aria-label="add" sx={{ ml: 2 }} type="submit">
-        <AddIcon />
-      </Fab>
+    <form autoComplete="off" onSubmit={handleSubmit}>
+      <Grid container spacing={2}>
+        <Grid item xs={11}>
+          <TextField
+            fullWidth
+            id="outlined-basic"
+            label="Description"
+            variant="outlined"
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+            required
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <Fab color="primary" aria-label="add" type="submit">
+            <AddIcon />
+          </Fab>
+        </Grid>
+      </Grid>
     </form>
   );
 }
