@@ -10,6 +10,7 @@ import Fab from "@mui/material/Fab";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
 import { deleteTask, markAsCompleted, markAsUncompleted } from "../store";
+import Grid from "@mui/material/Grid";
 
 export default function TaskList({ tasks }) {
   const dispatch = useDispatch();
@@ -17,43 +18,52 @@ export default function TaskList({ tasks }) {
   function createListItem(listTasks) {
     return listTasks.map((t) => {
       return (
-        <ListItem key={t.id}>
-          <ListItemText
-            style={{ textDecoration: t.completed ? "line-through" : "none" }}
-            primary={t.text}
-            secondary={`Creation date: ${format(
-              new Date(t.date),
-              "yyyy-MM-dd HH:mm:ss"
-            )}`}
-          ></ListItemText>
-          <Fab
-            color="error"
-            aria-label="delete"
-            sx={{ ml: 2 }}
-            onClick={() => dispatch(deleteTask(t.id))}
-          >
-            <DeleteIcon />
-          </Fab>
-          {!t.completed && (
-            <Fab
-              color="secondary"
-              aria-label="done"
-              sx={{ ml: 4 }}
-              onClick={() => dispatch(markAsCompleted(t.id))}
-            >
-              <DoneIcon />
-            </Fab>
-          )}
-          {t.completed && (
-            <Fab
-              color="secondary"
-              aria-label="undo"
-              sx={{ ml: 4 }}
-              onClick={() => dispatch(markAsUncompleted(t.id))}
-            >
-              <UndoIcon />
-            </Fab>
-          )}
+        <ListItem key={t.id} style={{ paddingRight: 0, paddingLeft: 0 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={10}>
+              <ListItemText
+                style={{
+                  textDecoration: t.completed ? "line-through" : "none",
+                }}
+                primary={t.text}
+                secondary={`Creation date: ${format(
+                  new Date(t.date),
+                  "yyyy-MM-dd HH:mm:ss"
+                )}`}
+              ></ListItemText>
+            </Grid>
+            <Grid item xs={1}>
+              <Fab
+                color="error"
+                aria-label="delete"
+                sx={{ mr: 2 }}
+                onClick={() => dispatch(deleteTask(t.id))}
+              >
+                <DeleteIcon />
+              </Fab>
+            </Grid>
+
+            <Grid item xs={1}>
+              {!t.completed && (
+                <Fab
+                  color="secondary"
+                  aria-label="done"
+                  onClick={() => dispatch(markAsCompleted(t.id))}
+                >
+                  <DoneIcon />
+                </Fab>
+              )}
+              {t.completed && (
+                <Fab
+                  color="secondary"
+                  aria-label="undo"
+                  onClick={() => dispatch(markAsUncompleted(t.id))}
+                >
+                  <UndoIcon />
+                </Fab>
+              )}
+            </Grid>
+          </Grid>
         </ListItem>
       );
     });
