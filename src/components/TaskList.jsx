@@ -5,10 +5,11 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
+import UndoIcon from "@mui/icons-material/Undo";
 import Fab from "@mui/material/Fab";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
-import { deleteTask, markAsCompleted } from "../store";
+import { deleteTask, markAsCompleted, markAsUncompleted } from "../store";
 
 export default function TaskList({ tasks }) {
   const dispatch = useDispatch();
@@ -41,6 +42,16 @@ export default function TaskList({ tasks }) {
               onClick={() => dispatch(markAsCompleted(t.id))}
             >
               <DoneIcon />
+            </Fab>
+          )}
+          {t.completed && (
+            <Fab
+              color="secondary"
+              aria-label="undo"
+              sx={{ ml: 4 }}
+              onClick={() => dispatch(markAsUncompleted(t.id))}
+            >
+              <UndoIcon />
             </Fab>
           )}
         </ListItem>

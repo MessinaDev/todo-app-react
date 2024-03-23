@@ -29,6 +29,14 @@ const slice = createSlice({
       saveTasksInLocalStorage(tasks);
       state.tasks = tasks;
     },
+    markAsUncompleted: (state, action) => {
+      // Fetch tasks before any operation..
+      const tasks = fetchTasksInLocalStorage();
+      const index = findIndexTask(tasks, action.payload);
+      tasks[index].completed = false;
+      saveTasksInLocalStorage(tasks);
+      state.tasks = tasks;
+    },
   },
 });
 
@@ -37,8 +45,13 @@ const store = configureStore({
 });
 export default store;
 
-export const { addTask, deleteTask, fetchTasks, markAsCompleted } =
-  slice.actions;
+export const {
+  addTask,
+  deleteTask,
+  fetchTasks,
+  markAsCompleted,
+  markAsUncompleted,
+} = slice.actions;
 
 store.subscribe(() => console.log(store.getState()));
 
