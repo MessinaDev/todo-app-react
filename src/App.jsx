@@ -13,16 +13,13 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useSelector } from "react-redux";
 
 export default function App() {
-  const [darkTheme, setDarkTheme] = useState(true);
+  const [darkTheme, setDarkTheme] = useState(fetchThemeInLocalStorage());
+  const tasks = useSelector(({ tasks }) => tasks);
 
   const theme = createTheme({
     palette: {
-      mode: darkTheme ? "dark" : "light",
+      mode: darkTheme,
     },
-  });
-
-  const tasks = useSelector((state) => {
-    return state.tasks;
   });
 
   return (
@@ -34,7 +31,13 @@ export default function App() {
         </header>
         <IconButton
           className="ButtonTheme"
-          onClick={() => setDarkTheme((prev) => !prev)}
+          onClick={() =>
+            setDarkTheme((prev) => {
+              const theme = prev === "dark" ? "light" : "dark";
+              saveThemeInLocalStorage(theme);
+              return theme;
+            })
+          }
         >
           {darkTheme ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
@@ -43,5 +46,12 @@ export default function App() {
       </div>
     </ThemeProvider>
   );
+}
+
+function saveThemeInLocalStorage(theme) {
+  localStorage.setItem("theme", theme);
+}
+function fetchThemeInLocalStorage() {
+  return localStorage.getItem("theme") || "dark";
 }
 
