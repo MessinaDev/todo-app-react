@@ -20,6 +20,11 @@ export default function NewTodo() {
     paddingRight: "10px",
   };
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    addTodo();
+  }
+
   function addTodo() {
     if (text) {
       dispatch(addTask(createNewTodo()));
@@ -34,11 +39,6 @@ export default function NewTodo() {
       date: new Date().toISOString(),
       completed: false,
     };
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    addTodo();
   }
 
   return (

@@ -3,30 +3,31 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 const slice = createSlice({
   name: "taskList",
   initialState: {
-    tasks: [
-      {
-        id: 1234,
-        text: "Initial task",
-        date: new Date().toISOString(),
-        completed: false,
-      },
-    ],
+    tasks: fetchTasksInLocalStorage(),
   },
   reducers: {
-    fetchTasks: ({ tasks }) => {
-      // TODO:
-      // tasks = tasks;
+    fetchTasks: ({ tasks }, action) => {
+      tasks = action.payload;
     },
     addTask: ({ tasks }, action) => {
       tasks.push(action.payload);
+      saveTasksInLocalStorage(tasks);
     },
-    deleteTask: ({ tasks }, action) => {
+    deleteTask: (state, action) => {
+      // Fetch tasks before any operation..
+      const tasks = fetchTasksInLocalStorage();
       const index = findIndexTask(tasks, action.payload);
       tasks.splice(index, 1);
+      saveTasksInLocalStorage(tasks);
+      state.tasks = tasks;
     },
-    markAsCompleted: ({ tasks }, action) => {
+    markAsCompleted: (state, action) => {
+      // Fetch tasks before any operation..
+      const tasks = fetchTasksInLocalStorage();
       const index = findIndexTask(tasks, action.payload);
       tasks[index].completed = true;
+      saveTasksInLocalStorage(tasks);
+      state.tasks = tasks;
     },
   },
 });
@@ -44,7 +45,15 @@ store.subscribe(() => console.log(store.getState()));
 function findIndexTask(tasks, id) {
   const index = tasks.findIndex((t) => t.id === id);
   if (index < 0) {
-    throw new Error(`ID ${id} not found`);
+    console.error(`Task ${id} not found`);
+    throw new Error(`Task ${id} not found`);
   }
   return index;
+}
+
+function saveTasksInLocalStorage(tasks) {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+function fetchTasksInLocalStorage() {
+  return JSON.parse(localStorage.getItem("tasks")) || [];
 }
