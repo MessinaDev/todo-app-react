@@ -10,11 +10,8 @@ import IconButton from "@mui/material/IconButton";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 
-import { useSelector } from "react-redux";
-
 export default function App() {
   const [darkTheme, setDarkTheme] = useState(fetchThemeInLocalStorage());
-  const tasks = useSelector(({ tasks }) => tasks);
 
   const theme = createTheme({
     palette: {
@@ -42,7 +39,7 @@ export default function App() {
           {darkTheme ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
         <NewTodo />
-        <TaskList tasks={tasks} />
+        <TaskList />
       </div>
     </ThemeProvider>
   );

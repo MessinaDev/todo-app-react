@@ -1,14 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+export const fetchTasks = createAsyncThunk("taskList/fetchTasks", async () => {
+  const tasks = await fetchTasksInLocalStorage();
+  return tasks;
+});
 
 const taskListSlice = createSlice({
   name: "taskList",
   initialState: {
-    tasks: fetchTasksInLocalStorage(),
+    tasks: [],
+    isLoading: false,
+    hasError: false,
   },
   reducers: {
-    fetchTasks: ({ tasks }, action) => {
-      tasks = action.payload;
-    },
     addTask: ({ tasks }, action) => {
       tasks.push(action.payload);
       saveTasksInLocalStorage(tasks);
@@ -38,15 +42,26 @@ const taskListSlice = createSlice({
       state.tasks = tasks;
     },
   },
+  extraReducers: {
+    [fetchTasks.pending]: (state, action) => {
+      state.tasks = [];
+      state.isLoading = true;
+      state.hasError = false;
+    },
+    [fetchTasks.fulfilled]: (state, action) => {
+      state.tasks = action.payload;
+      state.isLoading = false;
+      state.hasError = false;
+    },
+    [fetchTasks.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.hasError = true;
+    },
+  },
 });
 
-export const {
-  addTask,
-  deleteTask,
-  fetchTasks,
-  markAsCompleted,
-  markAsUncompleted,
-} = taskListSlice.actions;
+export const { addTask, deleteTask, markAsCompleted, markAsUncompleted } =
+  taskListSlice.actions;
 
 export default taskListSlice.reducer;
 

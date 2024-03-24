@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
@@ -8,16 +8,22 @@ import DoneIcon from "@mui/icons-material/Done";
 import UndoIcon from "@mui/icons-material/Undo";
 import Fab from "@mui/material/Fab";
 import { format } from "date-fns";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteTask,
+  fetchTasks,
   markAsCompleted,
   markAsUncompleted,
 } from "store/taskListSlice";
 import Grid from "@mui/material/Grid";
 
-export default function TaskList({ tasks }) {
+export default function TaskList() {
+  const tasks = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);
 
   function createListItem(listTasks) {
     return listTasks.map((t) => {
