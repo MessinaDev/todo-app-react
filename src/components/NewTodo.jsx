@@ -3,7 +3,7 @@ import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
 import { useDispatch } from "react-redux";
-import { addTask } from "../store";
+import { addTask } from "store/taskListSlice";
 import Grid from "@mui/material/Grid";
 
 export default function NewTodo() {

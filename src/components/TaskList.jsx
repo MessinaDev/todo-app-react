@@ -9,7 +9,11 @@ import UndoIcon from "@mui/icons-material/Undo";
 import Fab from "@mui/material/Fab";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
-import { deleteTask, markAsCompleted, markAsUncompleted } from "../store";
+import {
+  deleteTask,
+  markAsCompleted,
+  markAsUncompleted,
+} from "store/taskListSlice";
 import Grid from "@mui/material/Grid";
 
 export default function TaskList({ tasks }) {
