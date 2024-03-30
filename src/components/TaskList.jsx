@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
@@ -16,9 +16,11 @@ import {
   markAsUncompleted,
 } from "store/taskListSlice";
 import Grid from "@mui/material/Grid";
+import DateField from "./common/DatePicker";
 
 export default function TaskList() {
   const tasks = useSelector((state) => state.tasks);
+  const [filterDate, setFilterDate] = useState(new Date());
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,7 +28,12 @@ export default function TaskList() {
   }, [dispatch]);
 
   function createListItem(listTasks) {
-    return listTasks.map((t) => {
+    const taskFiltered =
+      filterDate && !isNaN(new Date(filterDate).getTime())
+        ? filterTasksByDate(listTasks, filterDate)
+        : listTasks;
+
+    return taskFiltered.map((t) => {
       return (
         <ListItem key={t.id} style={{ paddingRight: 0, paddingLeft: 0 }}>
           <Grid container spacing={2}>
@@ -38,7 +45,7 @@ export default function TaskList() {
                 primary={t.text}
                 secondary={`Creation date: ${format(
                   new Date(t.date),
-                  "yyyy-MM-dd HH:mm:ss"
+                  "dd/MM/yyyy HH:mm:ss"
                 )}`}
               ></ListItemText>
             </Grid>
@@ -85,7 +92,17 @@ export default function TaskList() {
 
   return (
     <>
-      <Box sx={{ mt: 4 }}>
+      <Box sx={{ mt: 8 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={3}>
+            <DateField
+              label="Filter tasks by date"
+              date={filterDate}
+              changeDate={setFilterDate}
+            />
+          </Grid>
+        </Grid>
+
         <h2>To complete</h2>
         <List>{listItemsToComplete}</List>
         <h2>Completed</h2>
@@ -107,4 +124,16 @@ function splitTasksByCompleted(tasks) {
   });
 
   return { tasksToComplete, tasksCompleted };
+}
+
+function filterTasksByDate(listTasks, date) {
+  const filterDateFormatted = formatDateToCompat(date);
+  return listTasks.filter(
+    ({ date }) => formatDateToCompat(date) === filterDateFormatted
+  );
+}
+
+function formatDateToCompat(date) {
+  const d = new Date(date);
+  return isNaN(d.getTime()) ? null : format(d, "yyyyMMdd");
 }
