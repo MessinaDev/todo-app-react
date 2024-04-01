@@ -62,7 +62,6 @@ const taskListSlice = createSlice({
 
 export const { addTask, deleteTask, markAsCompleted, markAsUncompleted } =
   taskListSlice.actions;
-
 export default taskListSlice.reducer;
 
 function findIndexTask(tasks, id) {

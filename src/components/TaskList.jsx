@@ -14,18 +14,38 @@ import {
   fetchTasks,
   markAsCompleted,
   markAsUncompleted,
-} from "store/taskListSlice";
+} from "store/reducers/taskListSlice";
 import Grid from "@mui/material/Grid";
 import DateField from "./common/DateField";
+import { showAlert } from "store/reducers/alertSlice";
 
 export default function TaskList() {
-  const tasks = useSelector((state) => state.tasks);
-  const [filterDate, setFilterDate] = useState(new Date());
+  const tasks = useSelector((state) => state.taskList.tasks);
+  const [filterDate, setFilterDate] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
+
+  function showAlertTaskCompleted() {
+    showAlertTask("Task completed");
+  }
+  function showAlertTaskDeleted() {
+    showAlertTask("Task deleted");
+  }
+  function showAlertTaskMarkAsToComplete() {
+    showAlertTask("Undo task completed");
+  }
+  function showAlertTask(text) {
+    dispatch(
+      showAlert({
+        text,
+        type: "success",
+        duration: 2000,
+      })
+    );
+  }
 
   function createListItem(listTasks) {
     const taskFiltered =
@@ -54,7 +74,10 @@ export default function TaskList() {
                 color="error"
                 aria-label="delete"
                 sx={{ mr: 2 }}
-                onClick={() => dispatch(deleteTask(t.id))}
+                onClick={() => {
+                  showAlertTaskDeleted();
+                  dispatch(deleteTask(t.id));
+                }}
               >
                 <DeleteIcon />
               </Fab>
@@ -65,7 +88,10 @@ export default function TaskList() {
                 <Fab
                   color="secondary"
                   aria-label="done"
-                  onClick={() => dispatch(markAsCompleted(t.id))}
+                  onClick={() => {
+                    showAlertTaskCompleted();
+                    dispatch(markAsCompleted(t.id));
+                  }}
                 >
                   <DoneIcon />
                 </Fab>
@@ -74,7 +100,10 @@ export default function TaskList() {
                 <Fab
                   color="secondary"
                   aria-label="undo"
-                  onClick={() => dispatch(markAsUncompleted(t.id))}
+                  onClick={() => {
+                    showAlertTaskMarkAsToComplete();
+                    dispatch(markAsUncompleted(t.id));
+                  }}
                 >
                   <UndoIcon />
                 </Fab>
@@ -87,6 +116,7 @@ export default function TaskList() {
   }
 
   const { tasksToComplete, tasksCompleted } = splitTasksByCompleted(tasks);
+  console.log("🚀 ~ TaskList ~ tasks:", tasks);
   const listItemsToComplete = createListItem(tasksToComplete);
   const listItemsCompleted = createListItem(tasksCompleted);
 
