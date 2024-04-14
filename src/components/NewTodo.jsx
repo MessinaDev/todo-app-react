@@ -32,7 +32,7 @@ export default function NewTodo() {
 
   function createNewTodo() {
     return {
-      id: Date.now(),
+      id: null,
       text,
       date: new Date().toISOString(),
       completed: false,

@@ -116,7 +116,6 @@ export default function TaskList() {
   }
 
   const { tasksToComplete, tasksCompleted } = splitTasksByCompleted(tasks);
-  console.log("🚀 ~ TaskList ~ tasks:", tasks);
   const listItemsToComplete = createListItem(tasksToComplete);
   const listItemsCompleted = createListItem(tasksCompleted);
 
